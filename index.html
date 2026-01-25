@@ -18,6 +18,14 @@
             overflow: hidden;
         }
         
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
         #text-display {
             font-size: 60px;
             font-weight: bold;
@@ -75,10 +83,12 @@
         
         #celebration-image {
             display: none;
-            max-width: 300px;
+            max-width: 400px;
+            width: 80%;
             margin-top: 30px;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            align-self: center;
         }
         
         .firework {
@@ -106,19 +116,27 @@
             transition: opacity 0.3s;
             display: none;
         }
+        
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="text-display">hello</div>
-        <div id="message-subtext"></div> <!-- Changed to message-subtext -->
-        <div class="error-message" id="error-message"></div>
-        <div class="choose-wisely" id="choose-wisely">choose wisely...</div>
-        <div class="button-container" id="button-container">
-            <button class="choice-btn" id="yes-btn">YES</button>
-            <button class="choice-btn" id="no-btn">NO</button>
+        <div class="content-wrapper">
+            <div id="text-display">hello</div>
+            <div id="message-subtext"></div>
+            <div class="error-message" id="error-message"></div>
+            <div class="choose-wisely" id="choose-wisely">choose wisely...</div>
+            <div class="button-container" id="button-container">
+                <button class="choice-btn" id="yes-btn">YES</button>
+                <button class="choice-btn" id="no-btn">NO</button>
+            </div>
+            <img id="celebration-image" src="images/valentines.jpg" alt="Celebration">
         </div>
-        <img id="celebration-image" src="images/valentines.jpg" alt="Celebration">
     </div>
 
     <script>
@@ -129,7 +147,7 @@
         
         // Get DOM elements
         const textDisplay = document.getElementById('text-display');
-        const messageSubtext = document.getElementById('message-subtext'); // Changed to messageSubtext
+        const messageSubtext = document.getElementById('message-subtext');
         const buttonContainer = document.getElementById('button-container');
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
@@ -137,7 +155,6 @@
         const chooseWiselyMessage = document.getElementById('choose-wisely');
         const celebrationImage = document.getElementById('celebration-image');
         
-     
         const customMessage = "Thank you for saying yes I was so scared you would say no. I am so excited your Valentine's Day surprises hehe. I hope you are too ❤️";
         
         // Initial click handler for the page
@@ -187,9 +204,10 @@
                 buttonContainer.style.display = 'none';
             }, 300);
             
-            // Show image
+            // Show image - now properly centered under the message
             celebrationImage.style.display = 'block';
             celebrationImage.style.opacity = '0';
+            celebrationImage.style.marginTop = '40px'; // Add more space between message and image
             setTimeout(() => {
                 celebrationImage.style.opacity = '1';
             }, 100);
