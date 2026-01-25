@@ -105,13 +105,11 @@
         <img id="celebration-image" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Celebration">
     </div>
     
-    <div class="no-clicks-counter" id="no-clicks-counter">
-        NO clicks: <span id="no-count">0</span>/3
-    </div>
+    
 
     <script>
         // Text sequence
-        const textSequence = ["hello", "will you"];
+        const textSequence = ["hello","chris phung", "will you", "please please pleaseeeee", "be my", "valentine"];
         let currentIndex = 0;
         let noClickCount = 0;
         
@@ -214,7 +212,7 @@
                 noBtn.style.transform = 'scale(0)';
                 setTimeout(() => {
                     noBtn.style.display = 'none';
-                    errorMessage.textContent = "NO option has been removed!";
+                    errorMessage.textContent = "Try again!";
                     errorMessage.style.opacity = '1';
                     setTimeout(() => {
                         errorMessage.style.opacity = '0';
