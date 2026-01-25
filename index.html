@@ -80,6 +80,7 @@
             font-size: 20px;
             margin-top: 10px;
             min-height: 30px;
+            transition: opacity 0.3s;
         }
         
         .no-clicks-counter {
@@ -92,12 +93,22 @@
             font-size: 18px;
             display: none;
         }
+        
+        .choose-wisely {
+            color: #ff9800;
+            font-size: 24px;
+            margin-top: 10px;
+            min-height: 30px;
+            transition: opacity 0.3s;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="text-display">hello</div>
         <div class="error-message" id="error-message"></div>
+        <div class="choose-wisely" id="choose-wisely">choose wisely...</div>
         <div class="button-container" id="button-container">
             <button class="choice-btn" id="yes-btn">YES</button>
             <button class="choice-btn" id="no-btn">NO</button>
@@ -105,7 +116,9 @@
         <img id="celebration-image" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Celebration">
     </div>
     
-    
+    <div class="no-clicks-counter" id="no-clicks-counter">
+        NO clicks: <span id="no-count">0</span>/3
+    </div>
 
     <script>
         // Text sequence
@@ -119,6 +132,7 @@
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const errorMessage = document.getElementById('error-message');
+        const chooseWiselyMessage = document.getElementById('choose-wisely');
         const celebrationImage = document.getElementById('celebration-image');
         const noClicksCounter = document.getElementById('no-clicks-counter');
         const noCountSpan = document.getElementById('no-count');
@@ -133,7 +147,7 @@
                     textDisplay.textContent = textSequence[currentIndex];
                     textDisplay.style.opacity = '1';
                     
-                    // After "will you" shows, wait a bit then show buttons
+                    // After "valentine" shows, wait a bit then show buttons
                     if (currentIndex === textSequence.length - 1) {
                         setTimeout(() => {
                             buttonContainer.style.display = 'flex';
@@ -157,8 +171,10 @@
             textDisplay.style.color = "#4CAF50";
             textDisplay.style.transform = "scale(1.5)";
             
-            // Hide buttons
+            // Hide buttons and messages
             buttonContainer.style.opacity = '0';
+            errorMessage.style.opacity = '0';
+            chooseWiselyMessage.style.opacity = '0';
             setTimeout(() => {
                 buttonContainer.style.display = 'none';
             }, 300);
@@ -185,9 +201,15 @@
             noClickCount++;
             noCountSpan.textContent = noClickCount;
             
+            // Clear previous messages
+            errorMessage.style.opacity = '0';
+            chooseWiselyMessage.style.opacity = '0';
+            
             // Show error message
-            errorMessage.textContent = "Error! Please try again.";
-            errorMessage.style.opacity = '1';
+            setTimeout(() => {
+                errorMessage.textContent = "Error, try again";
+                errorMessage.style.opacity = '1';
+            }, 100);
             
             // Shake animation for error
             textDisplay.style.transform = 'translateX(-10px)';
@@ -206,17 +228,32 @@
                 errorMessage.style.opacity = '0';
             }, 2000);
             
-            // After 3 clicks, make NO button disappear
+            // After 3 clicks, make NO button disappear and show "choose wisely..."
             if (noClickCount >= 3) {
                 noBtn.style.opacity = '0';
                 noBtn.style.transform = 'scale(0)';
                 setTimeout(() => {
                     noBtn.style.display = 'none';
-                    errorMessage.textContent = "Try again!";
-                    errorMessage.style.opacity = '1';
+                    
+                    // Hide error message first, then show choose wisely
+                    errorMessage.style.opacity = '0';
                     setTimeout(() => {
-                        errorMessage.style.opacity = '0';
-                    }, 2000);
+                        chooseWiselyMessage.style.display = 'block';
+                        chooseWiselyMessage.style.opacity = '1';
+                        
+                        // Make the choose wisely message pulse
+                        let pulseCount = 0;
+                        const pulseInterval = setInterval(() => {
+                            chooseWiselyMessage.style.transform = 'scale(1.1)';
+                            setTimeout(() => {
+                                chooseWiselyMessage.style.transform = 'scale(1)';
+                            }, 300);
+                            pulseCount++;
+                            if (pulseCount >= 5) { // Pulse 5 times then stop
+                                clearInterval(pulseInterval);
+                            }
+                        }, 1000);
+                    }, 300);
                 }, 300);
             }
         });
