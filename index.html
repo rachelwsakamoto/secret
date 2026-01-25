@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Sequence</title>
+    <title>Will You?</title>
     <style>
         body {
             display: flex;
@@ -14,63 +14,282 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             cursor: pointer;
+            transition: background-color 0.5s;
+            overflow: hidden;
         }
+        
         #text-display {
             font-size: 60px;
             font-weight: bold;
             text-align: center;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s, transform 0.3s;
             min-height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .button-container {
+            display: none;
+            gap: 30px;
+            margin-top: 40px;
+            transition: opacity 0.3s;
+        }
+        
+        .choice-btn {
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        #yes-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        #no-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .choice-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        #celebration-image {
+            display: none;
+            max-width: 300px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .firework {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 20px;
+            margin-top: 10px;
+            min-height: 30px;
+        }
+        
+        .no-clicks-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 18px;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="text-display">hello</div>
+    <div class="container">
+        <div id="text-display">hello</div>
+        <div class="error-message" id="error-message"></div>
+        <div class="button-container" id="button-container">
+            <button class="choice-btn" id="yes-btn">YES</button>
+            <button class="choice-btn" id="no-btn">NO</button>
+        </div>
+        <img id="celebration-image" src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Celebration">
+    </div>
+    
+    <div class="no-clicks-counter" id="no-clicks-counter">
+        NO clicks: <span id="no-count">0</span>/3
+    </div>
 
     <script>
-        // Array of text sequences - exactly as you described
-        const textSequence = [
-            "hello", 
-            "chris phung",
-            "will you",
-            "be my",
-            "valentine?",
-            "please?",  
-            "yayyy"       
-        ];
-
-        // Get the display element
-        const textDisplay = document.getElementById('text-display');
-        
-        // Start at index 0 (which is "hello" - already showing)
+        // Text sequence
+        const textSequence = ["hello", "will you"];
         let currentIndex = 0;
-
-        // Function to handle click and change text
-        function changeText() {
-            // Only proceed if we haven't reached the end
+        let noClickCount = 0;
+        
+        // Get DOM elements
+        const textDisplay = document.getElementById('text-display');
+        const buttonContainer = document.getElementById('button-container');
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const errorMessage = document.getElementById('error-message');
+        const celebrationImage = document.getElementById('celebration-image');
+        const noClicksCounter = document.getElementById('no-clicks-counter');
+        const noCountSpan = document.getElementById('no-count');
+        
+        // Initial click handler for the page
+        function handleInitialClick() {
             if (currentIndex < textSequence.length - 1) {
-                // Move to next text
                 currentIndex++;
-                
-                // Fade out current text
                 textDisplay.style.opacity = '0';
                 
-                // After fade out, change text and fade in
                 setTimeout(() => {
                     textDisplay.textContent = textSequence[currentIndex];
                     textDisplay.style.opacity = '1';
-                }, 300);
-            } else {
-                // If we're at the last word ("yayyy"), just do a little celebration animation
-                textDisplay.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    textDisplay.style.transform = 'scale(1)';
+                    
+                    // After "will you" shows, wait a bit then show buttons
+                    if (currentIndex === textSequence.length - 1) {
+                        setTimeout(() => {
+                            buttonContainer.style.display = 'flex';
+                            buttonContainer.style.opacity = '1';
+                            noClicksCounter.style.display = 'block';
+                            // Remove page click listener
+                            document.body.removeEventListener('click', handleInitialClick);
+                        }, 500);
+                    }
                 }, 300);
             }
         }
-
-        // Add click event listener to the entire page
-        document.body.addEventListener('click', changeText);
+        
+        // Add initial click listener
+        document.body.addEventListener('click', handleInitialClick);
+        
+        // Yes button handler
+        yesBtn.addEventListener('click', function() {
+            // Show celebration
+            textDisplay.textContent = "yayyy!";
+            textDisplay.style.color = "#4CAF50";
+            textDisplay.style.transform = "scale(1.5)";
+            
+            // Hide buttons
+            buttonContainer.style.opacity = '0';
+            setTimeout(() => {
+                buttonContainer.style.display = 'none';
+            }, 300);
+            
+            // Show image
+            celebrationImage.style.display = 'block';
+            celebrationImage.style.opacity = '0';
+            setTimeout(() => {
+                celebrationImage.style.opacity = '1';
+            }, 100);
+            
+            // Create fireworks
+            createFireworks();
+            
+            // Remove counter
+            noClicksCounter.style.display = 'none';
+            
+            // Change background color
+            document.body.style.backgroundColor = '#fffacd';
+        });
+        
+        // No button handler
+        noBtn.addEventListener('click', function() {
+            noClickCount++;
+            noCountSpan.textContent = noClickCount;
+            
+            // Show error message
+            errorMessage.textContent = "Error! Please try again.";
+            errorMessage.style.opacity = '1';
+            
+            // Shake animation for error
+            textDisplay.style.transform = 'translateX(-10px)';
+            setTimeout(() => {
+                textDisplay.style.transform = 'translateX(10px)';
+                setTimeout(() => {
+                    textDisplay.style.transform = 'translateX(-10px)';
+                    setTimeout(() => {
+                        textDisplay.style.transform = 'translateX(0)';
+                    }, 50);
+                }, 50);
+            }, 50);
+            
+            // Hide error message after 2 seconds
+            setTimeout(() => {
+                errorMessage.style.opacity = '0';
+            }, 2000);
+            
+            // After 3 clicks, make NO button disappear
+            if (noClickCount >= 3) {
+                noBtn.style.opacity = '0';
+                noBtn.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    noBtn.style.display = 'none';
+                    errorMessage.textContent = "NO option has been removed!";
+                    errorMessage.style.opacity = '1';
+                    setTimeout(() => {
+                        errorMessage.style.opacity = '0';
+                    }, 2000);
+                }, 300);
+            }
+        });
+        
+        // Fireworks function
+        function createFireworks() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            const body = document.body;
+            
+            // Create 50 fireworks
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.left = Math.random() * 100 + 'vw';
+                    firework.style.top = Math.random() * 100 + 'vh';
+                    
+                    body.appendChild(firework);
+                    
+                    // Animate the firework
+                    const size = Math.random() * 20 + 5;
+                    const duration = Math.random() * 1 + 0.5;
+                    
+                    firework.style.transition = `all ${duration}s ease-out`;
+                    firework.style.transform = `scale(${size})`;
+                    firework.style.opacity = '0';
+                    
+                    // Remove firework after animation
+                    setTimeout(() => {
+                        firework.remove();
+                    }, duration * 1000);
+                    
+                }, i * 100); // Stagger the fireworks
+            }
+            
+            // Keep creating fireworks every 2 seconds
+            const fireworksInterval = setInterval(() => {
+                createFireworksBatch();
+            }, 2000);
+            
+            function createFireworksBatch() {
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(() => {
+                        const firework = document.createElement('div');
+                        firework.className = 'firework';
+                        firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                        firework.style.left = Math.random() * 100 + 'vw';
+                        firework.style.top = Math.random() * 100 + 'vh';
+                        
+                        body.appendChild(firework);
+                        
+                        const size = Math.random() * 15 + 5;
+                        const duration = Math.random() * 1 + 0.5;
+                        
+                        firework.style.transition = `all ${duration}s ease-out`;
+                        firework.style.transform = `scale(${size})`;
+                        firework.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            firework.remove();
+                        }, duration * 1000);
+                    }, i * 100);
+                }
+            }
+            
+            // Stop fireworks after 10 seconds (optional)
+            setTimeout(() => {
+                clearInterval(fireworksInterval);
+            }, 10000);
+        }
     </script>
 </body>
 </html>
