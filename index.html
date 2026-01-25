@@ -3,9 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Word Changer</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        #word-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 30px 0;
+            min-height: 60px;
+            color: #333;
+        }
+        .instructions {
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <title> hello</title> 
+    <div class="container">
+        <h1>Click to Change Words</h1>
+        <div id="word-display">Ready?</div>
+        <p class="instructions">Click anywhere on the page to change the word</p>
+    </div>
+
+    <script>
+        // Array of words to display
+        const words = [
+            "Hello",
+            "Welcome",
+            "Awesome",
+            "JavaScript",
+            "Dynamic",
+            "Interactive",
+            "Creative",
+            "Fun",
+            "Amazing",
+            "Excellent"
+        ];
+
+        // Get the display element
+        const wordDisplay = document.getElementById('word-display');
+        
+        // Keep track of current word index
+        let currentIndex = 0;
+
+        // Function to change the word
+        function changeWord() {
+            // Update the display with the current word
+            wordDisplay.textContent = words[currentIndex];
+            
+            // Move to the next word, loop back to beginning if at the end
+            currentIndex = (currentIndex + 1) % words.length;
+            
+            // Add a subtle animation effect
+            wordDisplay.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                wordDisplay.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Add click event listener to the entire body
+        document.body.addEventListener('click', changeWord);
+
+        // Initialize with the first word
+        changeWord();
+    </script>
 </body>
 </html>
