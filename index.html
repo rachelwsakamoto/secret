@@ -24,7 +24,21 @@
             text-align: center;
             transition: opacity 0.3s, transform 0.3s;
             min-height: 80px;
+            margin-bottom: 10px;
+        }
+        
+        #message-subtext {
+            font-size: 24px;
+            color: #000000;
+            text-align: center;
             margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            font-style: italic;
+            min-height: 40px;
+            max-width: 600px;
+            line-height: 1.5;
+            padding: 0 20px;
         }
         
         .button-container {
@@ -97,6 +111,7 @@
 <body>
     <div class="container">
         <div id="text-display">hello</div>
+        <div id="message-subtext"></div> <!-- Changed to message-subtext -->
         <div class="error-message" id="error-message"></div>
         <div class="choose-wisely" id="choose-wisely">choose wisely...</div>
         <div class="button-container" id="button-container">
@@ -114,12 +129,16 @@
         
         // Get DOM elements
         const textDisplay = document.getElementById('text-display');
+        const messageSubtext = document.getElementById('message-subtext'); // Changed to messageSubtext
         const buttonContainer = document.getElementById('button-container');
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const errorMessage = document.getElementById('error-message');
         const chooseWiselyMessage = document.getElementById('choose-wisely');
         const celebrationImage = document.getElementById('celebration-image');
+        
+     
+        const customMessage = "Thank you for saying yes I was so scared you would say no. I am so excited your Valentine's Day surprises hehe. I hope you are too ❤️";
         
         // Initial click handler for the page
         function handleInitialClick() {
@@ -131,7 +150,7 @@
                     textDisplay.textContent = textSequence[currentIndex];
                     textDisplay.style.opacity = '1';
                     
-                    // After "valentine" shows, wait a bit then show buttons
+                    // After "valentine?" shows, wait a bit then show buttons
                     if (currentIndex === textSequence.length - 1) {
                         setTimeout(() => {
                             buttonContainer.style.display = 'flex';
@@ -151,8 +170,14 @@
         yesBtn.addEventListener('click', function() {
             // Show celebration
             textDisplay.textContent = "yayyy!";
-            textDisplay.style.color = "#black";
+            textDisplay.style.color = "black";
             textDisplay.style.transform = "scale(1.5)";
+            
+            // Show custom message subtext with delay
+            setTimeout(() => {
+                messageSubtext.textContent = customMessage;
+                messageSubtext.style.opacity = "1";
+            }, 300);
             
             // Hide buttons and messages
             buttonContainer.style.opacity = '0';
@@ -237,7 +262,7 @@
             }
         });
         
-        // Fireworks function - FIXED VERSION
+        // Fireworks function
         function createFireworks() {
             const colors = ['#ff0000', '#ff3366', '#ff6666', '#ff9999', '#ffcc00', '#ffff66'];
             const body = document.body;
